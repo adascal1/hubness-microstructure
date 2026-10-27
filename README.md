@@ -1,6 +1,6 @@
 # hubness-microstructure
 
-This repository contains select key functions used in the data analysis of the prepreint entitled: "Assessing the Functional-Structural Relationship of Connector Hubs in Temporal Lobe Epilepsy". This research article is currently available as a preprint on bioRxiv. This is the link to the research article: https://www.biorxiv.org/content/10.64898/2026.09.25.754445v2. 
+This repository contains key functions used in the data analysis of the prepreint entitled: "Assessing the Functional-Structural Relationship of Connector Hubs in Temporal Lobe Epilepsy". This research article is currently available as a preprint on bioRxiv. This is the link to the research article: https://www.biorxiv.org/content/10.64898/2026.09.25.754445v2. 
 
 This repository contains the script necessary to compute the Hub Disruption Index (HDI).
 
