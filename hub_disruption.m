@@ -1,12 +1,11 @@
-function [HDI,HEI, error_HDI, error_HEI, x_nn, y_nn, R2]=SPARK_HDI_mean_fixedMaps(patient_data, healthy_data, group, computationType, idx, varargin);
-%% This script will calculate the HDI and HEI values in surface or volume, and write the plotted points to a table
-% SPARK_HDI_mean_fixedMaps(patient_data, healthy_data, group)
+function [HDI,HEI, error_HDI, error_HEI, x_nn, y_nn, R2]=hub_disruption(patient_data, healthy_data, group, idx, varargin);
+%% This script will calculate the HDI and intercept values in surface or volume, and write the plotted points to a table
+% This script has a gramm toolbox dependency (https://www.mathworks.com/matlabcentral/fileexchange/54465-gramm-data-visualization-toolbox)
 % Mandatory Parameters: 
 % 'patient_data' : The group of patient data along the cortex, for the whole cortex.
 % 'healthy_data' : The group of healthy data along the cortex, for the whole cortex.
 % 'Group'        : Name of Subject Group
-% 'computationType': Whether you want to use cohen's d or full data values for the calculation
-% 'idx;
+% 'idx'          : Indices of ROI for which you want to compute HDI and the intercept
 % Optional Parameters: 
 % 'label'     : the name of the region being studied
 % 'writeTable': whether we want the plotted points to be saved as a .csv file. Default set to 'true'
@@ -35,27 +34,13 @@ function [HDI,HEI, error_HDI, error_HEI, x_nn, y_nn, R2]=SPARK_HDI_mean_fixedMap
     yLim =  opt.Results.yLim;
 
 
-    % Checking we have proper input types
-    if ~(strcmp(computationType, 'cohend') || strcmp(computationType, 'originalMethod'))
-        error('Input must be cohend or originalMethod')
-    end
-
     % Loading Data and only keeping the ROIs
     patient_data = patient_data(:, idx);
     healthy_data = healthy_data(:, idx);
 
-    if strcmp(computationType, 'originalMethod')
-    % assigning data to correct axis
-        x_axis_data = mean(healthy_data)./std(healthy_data);
-        y_axis_data = (mean(patient_data) - mean(healthy_data))./std(healthy_data);
-        nameXaxis = 'Normalized Mean of Hemispheric Average of Controls'; nameYaxis = {'Normalized Difference Between Average Epilepsy',...
-                                                                                        'and Hemispheric Average of Controls'};
-    elseif strcmp(computationType, 'cohend')
-        x_axis_data = mean(healthy_data) ./ std(healthy_data);
-        y_axis_data = patient_data;
-        nameXaxis = 'Normalized Mean of Hemispheric Average of Controls'; nameYaxis = "Cohen's D";
-
-    end
+    x_axis_data = mean(healthy_data) ./ std(healthy_data);
+    y_axis_data = patient_data;
+    nameXaxis = 'Normalized Mean of Hemispheric Average of Controls'; nameYaxis = "Cohen's D";
    
     % removing any x-y pairs which have either a nan or an inf 
     x_nn=x_axis_data((~isnan(x_axis_data)) & (~isinf(x_axis_data)) & (~isnan(y_axis_data)) & (~isinf(y_axis_data)));
@@ -106,15 +91,10 @@ function [HDI,HEI, error_HDI, error_HEI, x_nn, y_nn, R2]=SPARK_HDI_mean_fixedMap
                                 'SizeData', 40, ...
                                 'LineWidth', 0.3, ...
                                 'MarkerFaceColor', [0.4 0.4 0.4]);
-         % set(g.facet_axes_handles, ...
-         %                        'XTick',g.facet_axes_handles.XTick([1,length(g.facet_axes_handles.XTick)]), ...
-         %                        'YTick',g.facet_axes_handles.YTick([1,length(g.facet_axes_handles.YTick)]), ...
-         %                        'TickLength', [0 0]);
-
-         set(g.facet_axes_handles, ...
+        set(g.facet_axes_handles, ...
                                 'TickLength', [0 0]);
         % saving
-        saveas(fig, sprintf('/mfip/mfip1/arielle/MICs_dataset/05_SPARK_ANALYSIS/figures/o2e_hubDisruptionPlot_method-%s_ROI-%s_group-%s.svg',computationType, strrep(label, ' ', ''), group))
+        saveas(fig, sprintf('/path/to/save/folder/hubDisruptionPlot_ROI-%s_group-%s.svg', strrep(label, ' ', ''), group))
                 
         clear g;
     end
@@ -122,7 +102,6 @@ function [HDI,HEI, error_HDI, error_HEI, x_nn, y_nn, R2]=SPARK_HDI_mean_fixedMap
     % Writing to table of points
     if writeTable
         T = table(x_nn', y_nn','VariableNames', {'x', 'y'});
-        writetable(T, sprintf('/mfip/mfip1/arielle/MICs_dataset/05_SPARK_ANALYSIS/tables/o2e_HubDisruptionPlot_method-%s_ROI-%s_group-%s.csv', computationType, strrep(label, ' ', ''), group))
+        writetable(T, sprintf('/path/to/save/folder/HubDisruptionTable_ROI-%s_group-%s.csv', strrep(label, ' ', ''), group))
     end
 end
-
