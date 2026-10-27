@@ -4,6 +4,11 @@ This repository contains key functions used in the data analysis of the preprein
 
 This repository contains the script necessary to compute the Hub Disruption Index (HDI).
 
+# Associated Data
+Data associated with the project can be found on OSF : https://osf.io/zg2ve/overview?view_only=f044b0d7546a437b9bcf02fccd370bfb
+
+# Project Dependencies
+
 Other software used for analysis in this manuscript can be found in the following repositories: 
 
 (1) rs-fMRI and DWI processing were performed using micapipe_v0.2.3 : https://github.com/MICA-MNI/micapipe
